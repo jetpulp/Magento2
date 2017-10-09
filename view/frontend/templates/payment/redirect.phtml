@@ -22,6 +22,9 @@
 
 $values = $this->getFormFields();
 try {
+	if (!isset($values['PBX_TYPEPAIEMENT'])) {
+		return;
+	}
 	if ($values['PBX_TYPEPAIEMENT'] == 'KWIXO') {
 		$url = $this->escapeUrl($this->getKwixoUrl());
 	}

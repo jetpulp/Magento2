@@ -25,6 +25,10 @@ class Redirect extends \Paybox\Epayment\Controller\Payment
 {
     public function execute()
     {
+        $page = $this->resultPageFactory->create();
+        //We are using HTTP headers to control various page caches (varnish, fastly, built-in php cache)
+        $page->setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0', true);
+
         $cookieName = 'lastOrderId';
         $cookieManager = $this->_objectManager->get('Magento\Framework\Stdlib\CookieManagerInterface');
         $encryptor = $this->_objectManager->get('Magento\Framework\Encryption\Encryptor');
@@ -93,8 +97,6 @@ class Redirect extends \Paybox\Epayment\Controller\Payment
 
         // Render form
         $registry->register('pbxep/order_' . $orderId, $order);
-
-        $page = $this->resultPageFactory->create();
 
         // check that there is products in cart
         if ($order->getTotalDue() == 0) {
