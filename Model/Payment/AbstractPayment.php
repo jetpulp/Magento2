@@ -90,9 +90,10 @@ abstract class AbstractPayment extends AbstractMethod
     protected $_processingTransaction = null;
     protected $_objectManager = null;
     protected $_logger = null;
+    protected $_urlInterface = null;
 
     public function __construct(
-        \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
+        \Magento\Framework\Model\Context $context, \Magento\Framework\Registry $registry, \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory, \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory, \Magento\Payment\Helper\Data $paymentData, \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig, \Magento\Payment\Model\Method\Logger $logger, \Magento\Framework\UrlInterface $urlInterface, \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null, \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null, array $data = []
     ) {
         parent::__construct(
             $context, $registry, $extensionFactory, $customAttributeFactory, $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data
@@ -100,6 +101,7 @@ abstract class AbstractPayment extends AbstractMethod
 
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         // $this->_logger = $logger;
+        $this->_urlInterface = $urlInterface;
 
         $config = $this->getPayboxConfig();
         if ($config->getSubscription() == \Paybox\Epayment\Model\Config::SUBSCRIPTION_OFFER2 || $config->getSubscription() == \Paybox\Epayment\Model\Config::SUBSCRIPTION_OFFER3) {
@@ -473,7 +475,7 @@ abstract class AbstractPayment extends AbstractMethod
 
     public function getOrderPlaceRedirectUrl()
     {
-        return $this->getUrl('pbxep/payment/redirect', array('_secure' => true));
+        return $this->_urlInterface->getUrl('pbxep/payment/redirect', array('_secure' => true));
     }
 
     public function getPayboxAction()
