@@ -42,9 +42,6 @@ class Redirect extends \Magento\Framework\View\Element\Template
         $registry = $this->_objectManager->get('Magento\Framework\Registry');
         $current_order_id = $this->_objectManager->get('Magento\Checkout\Model\Session')->getCurrentPbxepOrderId();
         $order = $registry->registry('pbxep/order_'.$current_order_id);
-        if (null == $order) {
-            return array();
-        }
         $payment = $order->getPayment()->getMethodInstance();
         $cntr = $this->_objectManager->get('Paybox\Epayment\Model\Paybox');
         return $cntr->buildSystemParams($order, $payment);
